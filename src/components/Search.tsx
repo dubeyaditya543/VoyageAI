@@ -4,7 +4,7 @@ import { useUtilStore } from "../store/utilStore";
 
 export default function Search() {
   const [name, setName] = useState<string>("");
-  const ref = useRef(null)
+  const ref = useRef<HTMLInputElement>(null)
   const searchFocus = useUtilStore((state) => state.searchFocus)
 
   useEffect(() => {
