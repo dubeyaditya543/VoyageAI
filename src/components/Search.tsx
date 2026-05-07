@@ -8,7 +8,7 @@ export default function Search() {
   const searchFocus = useUtilStore((state) => state.searchFocus)
 
   useEffect(() => {
-    if(ref)
+    if(ref !== undefined)
     ref?.current?.focus()
   }, [searchFocus])
 
