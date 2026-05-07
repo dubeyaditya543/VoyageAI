@@ -26,7 +26,7 @@ export default function Search() {
           value={name}
           type="text"
           placeholder="Where are you going? (e.g. Tokyo, Bali, Paris)"
-          className="w-full pl-14 pr-24 py-5 bg-zinc-900 border border-zinc-800 rounded-2xl outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all text-xl placeholder:text-zinc-700 text-white"
+          className="w-full pl-14 pr-24 py-5 bg-zinc-900 border border-zinc-800 rounded-2xl outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all text-xl placeholder:text-zinc-700 text-white md:placeholder:text-md placeholder:text-sm "
         />
         {name.length > 0 && (
           <button 

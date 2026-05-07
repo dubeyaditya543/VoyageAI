@@ -27,7 +27,7 @@ export default function Header() {
         </div>
         
         {user ? <div className="flex gap-4 items-center">
-          <span className="font-bold uppercase">{user.name}</span>
+          <span className="font-bold hidden md:inline uppercase">{user.name}</span>
           <button onClick={() => handleOnClick()} className="btn-secondary text-sm shadow-none hover:cursor-pointer">Logout</button>
         </div> : <nav className="flex items-center gap-6">
           <button
