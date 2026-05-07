@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import ListCities from "./ListCities";
 import { useUtilStore } from "../store/utilStore";
+import { useDebounce } from "../hooks/useDebounce";
 
 export default function Search() {
   const [name, setName] = useState<string>("");
-  const ref = useRef<HTMLInputElement>(null)
+  const debouncedSearch = useDebounce(name);
+  const ref = useRef<HTMLInputElement | null>(null)
   const searchFocus = useUtilStore((state) => state.searchFocus)
 
   useEffect(() => {
@@ -37,7 +39,7 @@ export default function Search() {
           </button>
         )}
       </div>
-      {name.length > 0 && <ListCities cityName={name} setName={setName} />}
+      {name.length > 0 && <ListCities cityName={debouncedSearch} setName={setName} />}
     </div>
   );
 }

@@ -32,7 +32,7 @@ export const useAi = (daily: DailyData) => {
           messages: [
             {
               role: "user",
-              content: `Based on this weather data: ${JSON.stringify(daily)}, create a packing list. Return the response as a JSON object following this structure: { trip_summary: string, packing_categories: [{ category: string, items: [{ name: string, quantity: string, reason: string, importance: string, packed: false }] }] }. Include only ${categories} categories. Return ONLY the JSON. Do not include any markdown formatting. `,
+              content: `Based on this weather data: ${JSON.stringify(daily)}, create a packing list. Return the response as a JSON object following this structure: { trip_summary: string, packing_categories: [{ category: string, items: [{ name: string, quantity: string, reason: string, importance: string, packed: boolean }] }] }. Include only ${categories} categories. Return ONLY the JSON. Do not include any markdown formatting. Also for every item in packing_categories make sure the default value is false for the packed state`,
             },
           ],
         });
