@@ -64,7 +64,7 @@ export default function PackingCategory({ category, items }: PackingCategory) {
                 />
               </svg>
             </div>
-            <div className="w-full flex flex-col gap-1">
+            <div className={`w-full flex ${item.packed ? "line-through" : ""} flex-col gap-1 `}>
               <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-md font-bold">
                 {item.name}
               </span>
