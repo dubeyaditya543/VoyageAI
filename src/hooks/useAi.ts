@@ -36,7 +36,6 @@ export const useAi = (daily: DailyData) => {
             },
           ],
         });
-        // console.log(completion.choices[0]?.message?.content);
         const data = completion.choices[0]?.message?.content
           ? JSON.parse(completion.choices[0]?.message?.content)
           : null;
