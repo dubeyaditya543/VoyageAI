@@ -4,6 +4,7 @@ export default function Homepage(){
   return (
     <div className="flex flex-col min-h-screen">
       <HeroSection />
+      Helo world
     </div>
   )
 }
