@@ -51,9 +51,7 @@ export const useItemStore = create<ItemStore>((set) => ({
             ? {
                 ...item,
                 items: item.items.map((i) =>
-                  i.name === packedItem.name
-                    ? { ...i, packed: !i.packed }
-                    : i,
+                  i.name === packedItem.name ? { ...i, packed: !i.packed } : i,
                 ),
               }
             : item,

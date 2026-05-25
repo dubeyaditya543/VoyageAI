@@ -2,9 +2,19 @@ import { useNavigate } from "react-router-dom";
 import DestinationCard from "./DestinationCard";
 import CardInfo from "./InfoCard";
 import ListFeatures from "./ListFeatures";
+import { useConvexAuth } from "@convex-dev/auth/react";
 
 export default function HeroSection() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useConvexAuth()
+
+  const handleStartPlanning = () => {
+    if (isAuthenticated) {
+      navigate("/planner")
+    } else {
+      navigate("/login")
+    }
+  }
   
   return (
     <div className="flex flex-col w-full max-w-7xl mx-auto px-6 py-20 gap-32">
@@ -24,7 +34,7 @@ export default function HeroSection() {
         </p>
         
         <div className="flex items-center gap-4 pt-4">
-          <button onClick={() => navigate("/signup")} className="btn-primary cursor-pointer px-8 py-3 text-base h-12 flex items-center">
+          <button onClick={handleStartPlanning} className="btn-primary cursor-pointer px-8 py-3 text-base h-12 flex items-center">
             Start Planning
           </button>
           <button onClick={() => navigate("/login")} className="btn-secondary cursor-pointer px-8 py-3 text-base h-12 flex items-center">

@@ -8,6 +8,7 @@ export const useImage = (placeName: string) => {
         `https://api.unsplash.com/search/photos?query=${placeName}&client_id=${import.meta.env.VITE_UNSPLASH_KEY}&orientation=landscape`,
       );
       const data = await response.json();
+      console.log(data)
       return data?.["results"][0]["urls"]["regular"];
     },
     enabled: placeName !== null && placeName !== undefined,

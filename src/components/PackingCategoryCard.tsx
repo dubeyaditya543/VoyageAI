@@ -1,5 +1,7 @@
 import { useState, type ChangeEvent } from "react";
 import { useItemStore } from "../store/itemStore";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 export default function PackingCategory({ category, items }: PackingCategory) {
   const [showAddItem, setShowAddItem] = useState<boolean>(false);
@@ -7,6 +9,8 @@ export default function PackingCategory({ category, items }: PackingCategory) {
   const [quantity, setQuantity] = useState<string>("1");
   const addItem = useItemStore((state) => state.addItemManually);
   const markPacked = useItemStore((state) => state.markPacked);
+
+  const addItems = useMutation(api.packingItems.addItems)
 
   const handleAddItemName = (
     e: ChangeEvent<HTMLInputElement, HTMLInputElement>,
@@ -66,10 +70,10 @@ export default function PackingCategory({ category, items }: PackingCategory) {
             </div>
             <div className={`w-full flex ${item.packed ? "line-through" : ""} flex-col gap-1 `}>
               <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-md font-bold">
-                {item.name}
+                {item.name.toUpperCase()}
               </span>
               <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-xs font-medium">
-                {item.reason ? item.reason : ""}
+                {item.reason ? item.reason.toLocaleUpperCase() : ""}
               </span>
             </div>
           </label>
@@ -120,6 +124,7 @@ export default function PackingCategory({ category, items }: PackingCategory) {
               setQuantity("");
               setItemName("");
               setShowAddItem(false);
+              addItems({itemName: itemName, reason: "", quantity: 1, category: "clothing"})
             }}
             className="w-fit py-1 px-4 border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-[10px] font-black uppercase tracking-widest hover:border-zinc-700 hover:text-zinc-400 hover:bg-zinc-800/50 transition-all cursor-pointer flex items-center justify-center gap-2"
           >

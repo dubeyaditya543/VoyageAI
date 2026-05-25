@@ -10,10 +10,10 @@ import { usePlaces } from "../hooks/usePlaces";
 import { useCityStore } from "../store/cityStore";
 
 export default function Planner() {
-  const city = useCityStore((state) => state.currentCity)
+  const city = useCityStore((state) => state.currentCity);
   const { weatherData } = useWeather();
   const { response, isLoading } = useAi(weatherData?.["daily"]);
-  const {places, isLoading: placesLoading} = usePlaces(city)
+  const { places, isLoading: placesLoading } = usePlaces(city);
 
   const addItems = useItemStore((state) => state.addItems);
   const mode = useModeStore((state) => state.mode);
@@ -42,20 +42,24 @@ export default function Planner() {
 
       <div className="flex w-full gap-2 items-center font-bold">
         <button
-          onClick={() => changeMode()}
+          onClick={() => changeMode("planner")}
           className={`hover:bg-zinc-800/80 duration-300 transition-all px-4 py-2 rounded-md hover:cursor-pointer ${mode === "planner" ? "bg-zinc-800/80" : ""}`}
         >
           Planner
         </button>
         <button
-          onClick={() => changeMode()}
+          onClick={() => changeMode("places")}
           className={`hover:bg-zinc-800/80 duration-300 transition-all px-4 py-2 rounded-md hover:cursor-pointer ${mode === "places" ? "bg-zinc-800/80" : ""}`}
         >
           Famous Places
         </button>
       </div>
 
-      {mode === "planner" ? <ListPackingItems isLoading={isLoading} /> : <ListPlaces places={places ? places : []} isLoading={placesLoading} />}
+      {mode === "planner" ? (
+        <ListPackingItems isLoading={isLoading} />
+      ) : (
+        <ListPlaces places={places ? places : []} isLoading={placesLoading} />
+      )}
     </div>
   );
 }

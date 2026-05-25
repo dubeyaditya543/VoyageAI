@@ -1,6 +1,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useAuthStore } from "../store/authStore";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 export default function Signup() {
   const {
@@ -9,19 +9,30 @@ export default function Signup() {
     formState: { errors },
   } = useForm<SignupFormValues>();
 
-  const signup = useAuthStore((state) => state.signup);
-  const navigate = useNavigate()
+  const { signIn } = useAuthActions();
+  const navigate = useNavigate();
 
-  const onSignupSubmit: SubmitHandler<SignupFormValues> = (data) => {
-    signup(data);
-    navigate("/planner")
+  const onSignupSubmit: SubmitHandler<SignupFormValues> = async (data) => {
+    try {
+      await signIn("password", {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        flow: "signUp",
+      });
+      navigate("/planner");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
       <div className="w-full max-w-md glass-card rounded-3xl p-8 md:p-10 animate-in fade-in zoom-in-95 duration-700">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black tracking-tight mb-2">Join Voyage</h1>
+          <h1 className="text-3xl font-black tracking-tight mb-2">
+            Join Voyage
+          </h1>
           <p className="text-gray-400">Start planning your next great escape</p>
         </div>
 
@@ -30,7 +41,12 @@ export default function Signup() {
           className="flex flex-col gap-5"
         >
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-gray-300 ml-1" htmlFor="name">Full Name</label>
+            <label
+              className="text-sm font-semibold text-gray-300 ml-1"
+              htmlFor="name"
+            >
+              Full Name
+            </label>
             <input
               className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-gray-600"
               {...register("name", {
@@ -44,11 +60,18 @@ export default function Signup() {
               id="name"
               placeholder="John Doe"
             />
-            {errors.name && <p className="text-xs text-red-400 ml-1">{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-xs text-red-400 ml-1">{errors.name.message}</p>
+            )}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-gray-300 ml-1" htmlFor="email">Email</label>
+            <label
+              className="text-sm font-semibold text-gray-300 ml-1"
+              htmlFor="email"
+            >
+              Email
+            </label>
             <input
               className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-gray-600"
               {...register("email", {
@@ -62,11 +85,20 @@ export default function Signup() {
               id="email"
               placeholder="name@example.com"
             />
-            {errors.email && <p className="text-xs text-red-400 ml-1">{errors.email.message}</p>}
+            {errors.email && (
+              <p className="text-xs text-red-400 ml-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-semibold text-gray-300 ml-1" htmlFor="password">Password</label>
+            <label
+              className="text-sm font-semibold text-gray-300 ml-1"
+              htmlFor="password"
+            >
+              Password
+            </label>
             <input
               className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all placeholder:text-gray-600"
               {...register("password", {
@@ -80,7 +112,11 @@ export default function Signup() {
               id="password"
               placeholder="••••••••"
             />
-            {errors.password && <p className="text-xs text-red-400 ml-1">{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-xs text-red-400 ml-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
           <button
@@ -89,10 +125,13 @@ export default function Signup() {
           >
             Create Account
           </button>
-          
+
           <p className="text-center text-sm text-gray-400 mt-4">
             Already have an account?{" "}
-            <Link className="text-blue-400 font-semibold hover:underline" to="/login">
+            <Link
+              className="text-blue-400 font-semibold hover:underline"
+              to="/login"
+            >
               Sign In
             </Link>
           </p>

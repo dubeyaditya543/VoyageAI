@@ -14,10 +14,10 @@ type DailyData = {
   time: Date[];
 };
 
-const categories = ["Clothing","Electronics","Toiletries","Miscellaneous"]
+const categories = ["clothing","electronics","toiletries","miscellaneous"]
 
 export const useAi = (daily: DailyData) => {
-  const [response, setResponse] = useState<PackingResponse | null>(null);
+  const [response, setResponse] = useState<PackingItem[] | null>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | unknown>("");
 
@@ -28,7 +28,7 @@ export const useAi = (daily: DailyData) => {
         setLoading(true);
         setError("")
         const completion = await groq.chat.completions.create({
-          model: "openai/gpt-oss-120b",
+          model: "llama-3.3-70b-versatile",
           messages: [
             {
               role: "user",

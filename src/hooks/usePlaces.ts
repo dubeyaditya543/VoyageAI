@@ -26,18 +26,17 @@ export const usePlaces = (city: CityFetch | null) => {
         const response = await ai.models.generateContent({
           model: "gemini-3.5-flash",
           contents: `Based on ${JSON.stringify(city)} return an array of 8 objects only:
-[
-  {
-    id: number,
-    name: string,
-    description: string,
-    rating: number,          // 0‑5
-    about_place_link: string             // Wikipedia
-  },
-  …
-]
-Return ONLY the JSON. If a real image cannot be found, set imageLink to "".
-`,
+                  [
+                    {
+                      id: number,
+                      name: string,
+                      description: string,
+                      rating: number,          // 0‑5
+                      about_place_link: string             // Wikipedia
+                    },
+                    …
+                  ]
+                  Return ONLY the JSON. If a real image cannot be found, set imageLink to "".`,
         });
 
         const fullContent = response.text;
@@ -64,4 +63,3 @@ Return ONLY the JSON. If a real image cannot be found, set imageLink to "".
 
   return { places, isLoading, error };
 };
-

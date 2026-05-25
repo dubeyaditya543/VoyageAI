@@ -42,7 +42,6 @@ export default function ListPackingItems({
           </div>
         ) : (
           <div className="flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-[10px] font-black uppercase tracking-widest text-zinc-500">
-            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
             No items
           </div>
         )}

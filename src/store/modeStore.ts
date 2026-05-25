@@ -2,14 +2,14 @@ import { create } from "zustand";
 
 type ModeStore = {
   mode: string;
-  changeMode: () => void;
+  changeMode: (mode: string) => void;
 };
 
 export const useModeStore = create<ModeStore>((set) => ({
   mode: "planner",
-  changeMode: () => {
-    set((state) => ({
-      mode: state.mode === "planner" ? "places" : "planner",
+  changeMode: (mode: string) => {
+    set(() => ({
+      mode: mode,
     }));
   },
 }));
