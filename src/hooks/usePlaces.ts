@@ -1,6 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { useEffect, useState } from "react";
 import type { Place } from "../components/FamousPlaceCard";
+import type { CityFetch } from "../types";
 
 const ai = new GoogleGenAI({
   apiKey: import.meta.env.VITE_GEMINI_API_KEY,
