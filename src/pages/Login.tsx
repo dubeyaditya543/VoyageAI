@@ -3,6 +3,7 @@ import { useConvexAuth } from "convex/react";
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import type { LoginFormValues } from "../types";
 
 export default function Login() {
   const [isPending, setIsPending] = useState<boolean>(false);
@@ -42,7 +43,7 @@ export default function Login() {
 
   if (isLoading) {
     return (
-      <div className="p-12 flex justify-center bg-zinc-900 border border-zinc-800 rounded-2xl">
+      <div className="p-12 h-dvh flex justify-center bg-zinc-900 border border-zinc-800 rounded-2xl">
         <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-400 rounded-full animate-spin"></div>
       </div>
     );
@@ -79,11 +80,11 @@ export default function Login() {
                   value: /[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/gim,
                   message: "Invalid email format",
                 },
+                onChange: () => setError(null)
               })}
               type="email"
               id="email"
               placeholder="name@example.com"
-              onChange={() => setError(null)}
             />
             {errors.email && (
               <p className="text-xs text-red-400 ml-1">

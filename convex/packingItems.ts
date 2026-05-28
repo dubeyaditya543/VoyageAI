@@ -31,11 +31,11 @@ export const addItems = mutation({
     if (!userId) throw new ConvexError("Unauthenticated");
     await ctx.db.insert("packingItems", {
       userId,
-      itemName: args.itemName,
+      itemName: args.itemName.toLowerCase(),
       category: args.category,
       reason: args.reason ?? "",
       quantity: args.quantity,
-      checked: false,
+      packed: false,
     });
   },
 });
@@ -63,7 +63,7 @@ export const addBulk = mutation({
       args.bulkItems.map((item) => {
         ctx.db.insert("packingItems", {
           userId,
-          checked: false,
+          packed: false,
           reason: item.reason ?? "",
           ...item,
         });
@@ -79,6 +79,6 @@ export const checkItem = mutation({
     if (!userId) throw new ConvexError("Unauthenticated");
     const item = await ctx.db.get(args.itemId);
     if (!item) throw new Error("Item not found");
-    await ctx.db.patch("packingItems", args.itemId, { checked: !item.checked });
+    await ctx.db.patch("packingItems", args.itemId, { packed: !item.packed });
   },
 });

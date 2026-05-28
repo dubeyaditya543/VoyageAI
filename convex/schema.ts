@@ -16,8 +16,10 @@ const schema = defineSchema({
     ),
     reason: v.string(),
     quantity: v.number(),
-    checked: v.boolean(),
+    packed: v.boolean(),
   }).index("by_user", ["userId"]),
+
+  
 });
 
 export default schema;

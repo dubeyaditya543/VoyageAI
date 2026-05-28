@@ -21,7 +21,7 @@ export default function ListCities({
     );
   }
 
-  if (!cities) return null;
+  if (!cities || !cities.length) return <div>No destination found</div>;
 
   return (
     <div className="flex flex-col gap-1 max-h-72 overflow-y-auto z-50 bg-zinc-900 border border-zinc-800 rounded-2xl p-2 shadow-2xl">

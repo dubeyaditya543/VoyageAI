@@ -21,7 +21,6 @@ export default function HeroSection() {
       {/* Hero */}
       <section className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-xs font-medium text-zinc-400">
-          <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
           AI-Powered Travel Intelligence
         </div>
         
@@ -36,9 +35,6 @@ export default function HeroSection() {
         <div className="flex items-center gap-4 pt-4">
           <button onClick={handleStartPlanning} className="btn-primary cursor-pointer px-8 py-3 text-base h-12 flex items-center">
             Start Planning
-          </button>
-          <button onClick={() => navigate("/login")} className="btn-secondary cursor-pointer px-8 py-3 text-base h-12 flex items-center">
-            View Demo
           </button>
         </div>
       </section>
@@ -84,7 +80,6 @@ export default function HeroSection() {
         <ListFeatures />
       </section>
 
-      {/* Info Card / Final CTA */}
       <CardInfo />
     </div>
   );

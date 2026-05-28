@@ -1,6 +1,9 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthActions } from "@convex-dev/auth/react";
+import type { SignupFormValues } from "../types";
+import { useConvexAuth } from "convex/react";
+import { useEffect } from "react";
 
 export default function Signup() {
   const {
@@ -11,7 +14,21 @@ export default function Signup() {
 
   const { signIn } = useAuthActions();
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useConvexAuth();
 
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      navigate("/planner");
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="p-12 h-dvh flex justify-center items-center rounded-2xl">
+        <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-400 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
   const onSignupSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     try {
       await signIn("password", {

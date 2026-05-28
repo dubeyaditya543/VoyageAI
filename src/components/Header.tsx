@@ -40,19 +40,25 @@ export default function Header() {
             </button>
           </div>
         ) : (
-            <nav className="flex items-center gap-6">
-            <button
-              onClick={() => navigate("/login")}
-              className="text-sm font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
-            >
-              Sign In
-            </button>
-            <button
-              onClick={() => navigate("/signup")}
-              className="btn-primary text-sm shadow-none hover:cursor-pointer"
-            >
-              Get Started
-            </button>
+          <nav className="flex items-center gap-6">
+            {user === undefined ? (
+              <div>Loading...</div>
+            ) : (
+              <>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="text-sm font-medium text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="btn-primary text-sm shadow-none hover:cursor-pointer"
+                >
+                  Get Started
+                </button>
+              </>
+            )}
           </nav>
         )}
       </div>

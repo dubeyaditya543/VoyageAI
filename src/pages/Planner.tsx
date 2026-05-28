@@ -1,28 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import ListPackingItems from "../components/ListPackingItems";
 import Search from "../components/Search";
-import { useAi } from "../hooks/useAi";
 import { useWeather } from "../hooks/useWeather";
 import { useItemStore } from "../store/itemStore";
 import { useModeStore } from "../store/modeStore";
 import ListPlaces from "../components/ListPlaces";
 import { usePlaces } from "../hooks/usePlaces";
 import { useCityStore } from "../store/cityStore";
+import { useTestAi } from "../hooks/useTestAi";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 export default function Planner() {
   const city = useCityStore((state) => state.currentCity);
   const { weatherData } = useWeather();
-  const { response, isLoading } = useAi(weatherData?.["daily"]);
+  const {data, isLoading} = useTestAi(weatherData?.["daily"])
   const { places, isLoading: placesLoading } = usePlaces(city);
+
+  const lastSubmittedDataRef = useRef<typeof data | null>(null)
+
+  const addBulk = useMutation(api.packingItems.addBulk)
+  const response = useQuery(api.packingItems.list)
 
   const addItems = useItemStore((state) => state.addItems);
   const mode = useModeStore((state) => state.mode);
   const changeMode = useModeStore((state) => state.changeMode);
 
   useEffect(() => {
-    if (response !== undefined && response !== null)
-      addItems(response?.["packing_categories"]);
-  }, [response, addItems]);
+    if(response !== undefined){
+      addItems(response)
+    }
+  }, [response, addItems])
+
+  useEffect(() => {
+    if(!isLoading && data && data.length > 0 && data !== lastSubmittedDataRef.current){
+      addBulk({bulkItems: data})
+    }
+  }, [data, isLoading, addBulk])
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-20 space-y-15">

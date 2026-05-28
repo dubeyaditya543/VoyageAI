@@ -1,3 +1,5 @@
+import type { Id } from "../../convex/_generated/dataModel";
+
 type User = {
   name: string;
   email: string;
@@ -73,24 +75,11 @@ type CityFetch = {
 };
 
 type PackingItem = {
-  name: string;
-  quantity: string;
+  _id?: Id<"packingItems">;
+  userId?: Id<"users">;
+  itemName: string;
+  category: "clothing" | "electronics" | "toiletries" | "miscellaneous";
   reason?: string;
-  importance?: "High" | "Medium" | "Low";
-  packed?: boolean
-
-  // itemName: string;
-  // category: "clothing" | "electronics" | "toiletries" | "miscellaneous";
-  // reason: string;
-  // quantity: number;
-};
-
-type PackingCategory = {
-  category: string;
-  items: PackingItem[];
-};
-
-type PackingResponse = {
-  trip_summary: string;
-  packing_categories: PackingCategory[];
+  quantity: number;
+  packed: boolean
 };

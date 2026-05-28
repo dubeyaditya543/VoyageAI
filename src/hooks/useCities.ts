@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import type { CitiesFetched } from "../types";
 
 export const useCities = (city: string) => {
   const {
@@ -13,7 +14,7 @@ export const useCities = (city: string) => {
         `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=10&language=en&format=json`,
       );
       const data = await response.json();
-      return data["results"] as CitiesFetched;
+      return data["results"] as CitiesFetched ?? [];
     },
   });
 

@@ -17,10 +17,6 @@ export default function Layout(){
           <p className="text-zinc-600 text-xs">
             © 2026 Voyage AI. Built for the modern traveler.
           </p>
-          <div className="flex gap-6">
-            <a href="#" className="text-zinc-600 hover:text-zinc-400 transition-colors text-xs">Terms</a>
-            <a href="#" className="text-zinc-600 hover:text-zinc-400 transition-colors text-xs">Privacy</a>
-          </div>
         </div>
       </footer>
     </div>

@@ -10,7 +10,9 @@ export default function ProtectedRoute({
   const location = useLocation();
   const { isLoading, isAuthenticated } = useConvexAuth();
   if (isLoading) {
-    return <div className="text-center text-2xl font-semibold">Loading...</div>;
+    return <div className="p-12 h-dvh flex justify-center items-center rounded-2xl">
+      <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-400 rounded-full animate-spin"></div>
+    </div>
   }
 
   return isAuthenticated ? (
