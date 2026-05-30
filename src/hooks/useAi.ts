@@ -1,5 +1,6 @@
 import Groq from "groq-sdk";
 import { useEffect, useState } from "react";
+import type { PackingItem } from "../types";
 const groq = new Groq({
   apiKey: import.meta.env.VITE_API_KEY,
   dangerouslyAllowBrowser: true,
@@ -32,7 +33,7 @@ export const useAi = (daily: DailyData) => {
           messages: [
             {
               role: "user",
-              content: `Based on this weather data: ${JSON.stringify(daily)}, create a packing list. Return the response as a JSON object following this structure: { trip_summary: string, packing_categories: [{ category: string, items: [{ name: string, quantity: string, reason: string (a bit descriptive), importance: string, packed: boolean }] }] }. Make sure that the packed value is always false. Include only ${categories} categories. Make sure each category has atleast 10 items. Return ONLY the JSON. Do not include any markdown formatting. Also for every item in packing_categories make sure the default value is false for the packed state`,
+              content: `Based on this weather data: ${JSON.stringify(daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Return ONLY the JSON. Do not include any markdown formatting.`,
             },
           ],
         });

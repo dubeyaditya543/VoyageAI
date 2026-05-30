@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { LoginData, SignupData, User } from "../types";
 
 type AuthStore = {
   currentUser: User | null;

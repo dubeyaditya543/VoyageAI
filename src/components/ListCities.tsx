@@ -1,6 +1,8 @@
+import { useMutation } from "convex/react";
 import { useCities } from "../hooks/useCities";
 import { useCityStore } from "../store/cityStore";
 import { useItemStore } from "../store/itemStore";
+import { api } from "../../convex/_generated/api";
 
 export default function ListCities({
   cityName,
@@ -12,6 +14,8 @@ export default function ListCities({
   const { cities, isLoading } = useCities(cityName);
   const setCity = useCityStore((state) => state.setCity);
   const clearItems = useItemStore((state) => state.clearItems);
+  
+  const addCity = useMutation(api.packingItems.addCity) 
 
   if (isLoading) {
     return (
@@ -32,6 +36,7 @@ export default function ListCities({
             key={city.id}
             onClick={() => {
               setCity(city);
+              addCity({cityName: city.name})
               setName("");
               clearItems();
             }}

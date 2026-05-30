@@ -5,8 +5,13 @@ import { v } from "convex/values";
 const schema = defineSchema({
   ...authTables,
 
-  packingItems: defineTable({
+  trips: defineTable({
     userId: v.id("users"),
+    cityName: v.string(),
+  }).index("by_user", ["userId"]),
+
+  packingItems: defineTable({
+    tripId: v.id("trips"),
     itemName: v.string(),
     category: v.union(
       v.literal("clothing"),
@@ -14,12 +19,10 @@ const schema = defineSchema({
       v.literal("toiletries"),
       v.literal("miscellaneous"),
     ),
-    reason: v.string(),
+    reason: v.optional(v.string()),
     quantity: v.number(),
     packed: v.boolean(),
-  }).index("by_user", ["userId"]),
-
-  
+  }).index("by_trip", ["tripId"]),
 });
 
 export default schema;

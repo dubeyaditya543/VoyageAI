@@ -76,7 +76,7 @@ type CityFetch = {
 
 type PackingItem = {
   _id?: Id<"packingItems">;
-  userId?: Id<"users">;
+  tripId?: Id<"trips">;
   itemName: string;
   category: "clothing" | "electronics" | "toiletries" | "miscellaneous";
   reason?: string;

@@ -1,7 +1,8 @@
-import { useCityStore } from "../store/cityStore";
+import { useQuery } from "convex/react";
 import { useItemStore } from "../store/itemStore";
 import { useUtilStore } from "../store/utilStore";
 import PackingCategory from "./PackingCategoryCard";
+import { api } from "../../convex/_generated/api";
 
 type Category = "clothing" | "electronics" | "toiletries" | "miscellaneous";
 
@@ -11,8 +12,9 @@ export default function ListPackingItems({
   isLoading: boolean;
 }) {
   const items = useItemStore((state) => state.items);
-  const city = useCityStore((state) => state.currentCity);
   const handleFocus = useUtilStore((state) => state.handleFocus);
+
+  const tripInfo = useQuery(api.packingItems.getTripInfo)
 
   const clothingList = items?.filter(
     (packingItem) => packingItem.category === "clothing",
@@ -39,14 +41,14 @@ export default function ListPackingItems({
       <div className="flex flex-col md:flex-row items-end justify-between gap-4">
         <div className="space-y-2">
           <h2 className="text-3xl font-bold text-white tracking-tight">
-            {city ? (
+            {tripInfo ? (
               <div>
                 Your Packing List for{" "}
                 <span
                   onClick={handleFocus}
                   className="hover:cursor-pointer underline"
                 >
-                  {city?.name}
+                  {tripInfo?.cityName}
                 </span>
               </div>
             ) : (

@@ -31,7 +31,7 @@ export const useTestAi = (daily: DailyData) => {
         setError("");
 
         const response = await ai.models.generateContent({
-          model: "gemini-3.1-flash-lite",
+          model: "gemini-3.5-flash",
           contents: `Based on this weather data: ${JSON.stringify(daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string, quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has at around 10 items. Return ONLY the JSON. Do not include any markdown formatting.`,
         });
 

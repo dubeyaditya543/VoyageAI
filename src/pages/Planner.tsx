@@ -7,20 +7,23 @@ import { useModeStore } from "../store/modeStore";
 import ListPlaces from "../components/ListPlaces";
 import { usePlaces } from "../hooks/usePlaces";
 import { useCityStore } from "../store/cityStore";
-import { useTestAi } from "../hooks/useTestAi";
+// import { useTestAi } from "../hooks/useTestAi";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { useAi } from "../hooks/useAi";
 
 export default function Planner() {
   const city = useCityStore((state) => state.currentCity);
   const { weatherData } = useWeather();
-  const {data, isLoading} = useTestAi(weatherData?.["daily"])
+  const {response: data, isLoading} = useAi(weatherData?.["daily"])
   const { places, isLoading: placesLoading } = usePlaces(city);
 
   const lastSubmittedDataRef = useRef<typeof data | null>(null)
 
+  const tripInfo = useQuery(api.packingItems.getTripInfo)
+  
   const addBulk = useMutation(api.packingItems.addBulk)
-  const response = useQuery(api.packingItems.list)
+  const response = useQuery(api.packingItems.list, tripInfo ? {tripId: tripInfo._id} : "skip")
 
   const addItems = useItemStore((state) => state.addItems);
   const mode = useModeStore((state) => state.mode);
@@ -33,10 +36,11 @@ export default function Planner() {
   }, [response, addItems])
 
   useEffect(() => {
-    if(!isLoading && data && data.length > 0 && data !== lastSubmittedDataRef.current){
-      addBulk({bulkItems: data})
+    if(!isLoading && data && data.length > 0 && data !== lastSubmittedDataRef.current && tripInfo){
+      addBulk({ bulkItems: data, tripId: tripInfo._id })
+      lastSubmittedDataRef.current = data
     }
-  }, [data, isLoading, addBulk])
+  }, [data, isLoading, addBulk, tripInfo, tripInfo?._id])
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-20 space-y-15">

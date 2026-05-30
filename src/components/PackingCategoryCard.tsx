@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent } from "react";
 import { useItemStore } from "../store/itemStore";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { PackingItem } from "../types";
 
@@ -20,12 +20,14 @@ export default function PackingCategory({
   const markPacked = useItemStore((state) => state.markPacked);
 
   const addItems = useMutation(api.packingItems.addItems);
-  const checkItem = useMutation(api.packingItems.checkItem)
+  const checkItem = useMutation(api.packingItems.checkItem);
+
+  const tripInfo = useQuery(api.packingItems.getTripInfo);
 
   const handleAddItemName = (
     e: ChangeEvent<HTMLInputElement, HTMLInputElement>,
   ) => {
-      setItemName(e.target.value);
+    setItemName(e.target.value);
   };
 
   const handleSetQuantity = (
@@ -54,7 +56,13 @@ export default function PackingCategory({
             <div className="relative flex items-center">
               <input
                 type="checkbox"
-                onChange={() => { if (item._id) { markPacked(item?._id); checkItem({ itemId: item?._id }) } }}
+                checked={item.packed}
+                onChange={() => {
+                  if (item._id && tripInfo) {
+                    markPacked(item?._id);
+                    checkItem({ itemId: item?._id, tripId: tripInfo._id });
+                  }
+                }}
                 className="peer h-5 w-5 appearance-none rounded-lg border border-zinc-800 bg-zinc-900 checked:bg-white checked:border-white transition-all cursor-pointer"
               />
               <svg
@@ -131,12 +139,13 @@ export default function PackingCategory({
               setQuantity(1);
               setItemName("");
               setShowAddItem(false);
-              addItems({
-                itemName: itemName,
-                reason: "",
-                quantity: quantity,
-                category: category,
-              });
+              if (tripInfo)
+                addItems({
+                  itemName: itemName,
+                  quantity: quantity,
+                  category: category,
+                  tripId: tripInfo?._id,
+                });
             }}
             className="w-fit py-1 px-4 border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-[10px] font-black uppercase tracking-widest hover:border-zinc-700 hover:text-zinc-400 hover:bg-zinc-800/50 transition-all hover:cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2"
             disabled={itemName.length === 0}
