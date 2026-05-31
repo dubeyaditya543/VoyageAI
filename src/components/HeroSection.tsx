@@ -58,8 +58,8 @@ export default function HeroSection() {
             <h2 className="text-3xl font-bold text-white">Popular Destinations</h2>
             <p className="text-zinc-500 text-lg">Curated lists for trending global cities.</p>
           </div>
-          <button className="text-sm font-semibold text-blue-500 hover:text-blue-400 transition-colors flex items-center gap-1">
-            Browse all <span>→</span>
+          <button onClick={() => navigate("/login")} className="text-sm hover:cursor-pointer hover:bg-transparent border-3 rounded-lg px-2 transition-all duration-400 py-2 font-semibold text-blue-500 hover:text-blue-400 flex items-center gap-1">
+            Explore <span>→</span>
           </button>
         </div>
         
