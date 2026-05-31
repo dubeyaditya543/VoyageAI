@@ -14,7 +14,7 @@ export default function ListPackingItems({
   const items = useItemStore((state) => state.items);
   const handleFocus = useUtilStore((state) => state.handleFocus);
 
-  const tripInfo = useQuery(api.packingItems.getTripInfo)
+  const tripInfo = useQuery(api.packingItems.getTripInfo);
 
   const clothingList = items?.filter(
     (packingItem) => packingItem.category === "clothing",
@@ -76,9 +76,11 @@ export default function ListPackingItems({
         </div>
       )}
 
-      {!items.length && !isLoading ? (
+      {!items.length && !isLoading && (
         <div className="text-center font-semibold">Nothing to show here...</div>
-      ) : (
+      )}
+
+      {!isLoading && items.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {generatedList.map((item) => (
             <PackingCategory

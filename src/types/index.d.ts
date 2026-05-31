@@ -32,46 +32,46 @@ type City = {
 
 type CitiesFetched = [
   {
-    id: number;
+    id?: number;
     name: string;
     latitude: number;
     longitude: number;
-    elevation: number;
-    feature_code: string;
+    elevation?: number;
+    feature_code?: string;
     country_code: string;
-    admin1_id: number;
-    admin3_id: number;
-    admin4_id: number;
-    timezone: string;
-    population: number;
-    postcodes: [number, number];
+    admin1_id?: number;
+    admin3_id?: number;
+    admin4_id?: number;
+    timezone?: string;
+    population?: number;
+    postcodes?: string[];
     country_id: number;
     country: string;
-    admin1: string;
-    admin3: string;
-    admin4: string;
+    admin1?: string;
+    admin3?: string;
+    admin4?: string;
   },
 ];
 
 type CityFetch = {
-  id: number;
+  id?: number;
   name: string;
   latitude: number;
   longitude: number;
-  elevation: number;
-  feature_code: string;
+  elevation?: number;
+  feature_code?: string;
   country_code: string;
-  admin1_id: number;
-  admin3_id: number;
-  admin4_id: number;
-  timezone: string;
-  population: number;
-  postcodes: [number, number];
+  admin1_id?: number;
+  admin3_id?: number;
+  admin4_id?: number;
+  timezone?: string;
+  population?: number;
+  postcodes?: string[];
   country_id: number;
   country: string;
-  admin1: string;
-  admin3: string;
-  admin4: string;
+  admin1?: string;
+  admin3?: string;
+  admin4?: string;
 };
 
 type PackingItem = {
@@ -81,5 +81,5 @@ type PackingItem = {
   category: "clothing" | "electronics" | "toiletries" | "miscellaneous";
   reason?: string;
   quantity: number;
-  packed: boolean
+  packed: boolean;
 };

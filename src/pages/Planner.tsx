@@ -1,46 +1,84 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ListPackingItems from "../components/ListPackingItems";
 import Search from "../components/Search";
 import { useWeather } from "../hooks/useWeather";
 import { useItemStore } from "../store/itemStore";
 import { useModeStore } from "../store/modeStore";
 import ListPlaces from "../components/ListPlaces";
-import { usePlaces } from "../hooks/usePlaces";
-import { useCityStore } from "../store/cityStore";
-// import { useTestAi } from "../hooks/useTestAi";
-import { useMutation, useQuery } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { useAi } from "../hooks/useAi";
+import { useFamousPlaceStore } from "../store/famousPlaceStore";
 
 export default function Planner() {
-  const city = useCityStore((state) => state.currentCity);
-  const { weatherData } = useWeather();
-  const {response: data, isLoading} = useAi(weatherData?.["daily"])
-  const { places, isLoading: placesLoading } = usePlaces(city);
+  const [data, setData] = useState<[] | null>(null);
+  const [aiLoading, setAiLoading] = useState<boolean>(false);
+  const [placesLoading, setPlacesLoading] = useState(false);
 
-  const lastSubmittedDataRef = useRef<typeof data | null>(null)
+  const tripInfo = useQuery(api.packingItems.getTripInfo);
 
-  const tripInfo = useQuery(api.packingItems.getTripInfo)
-  
-  const addBulk = useMutation(api.packingItems.addBulk)
-  const response = useQuery(api.packingItems.list, tripInfo ? {tripId: tripInfo._id} : "skip")
+  const { weatherData, isLoading: weatherLoading } = useWeather();
+
+  const fetchFamousPlaces = useAction(api.ai.useAiToFetchFamousPlaces);
+
+  const lastSubmittedDataRef = useRef<typeof data | null>(null);
+
+  const fetchPackingList = useAction(api.ai.useAiToFetchPackingList);
+
+  const addBulk = useMutation(api.packingItems.addBulk);
+  const response = useQuery(
+    api.packingItems.list,
+    tripInfo ? { tripId: tripInfo._id } : "skip",
+  );
 
   const addItems = useItemStore((state) => state.addItems);
   const mode = useModeStore((state) => state.mode);
   const changeMode = useModeStore((state) => state.changeMode);
+  const famousPlaces = useFamousPlaceStore((state) => state.places);
+  const addPlaces = useFamousPlaceStore((state) => state.addPlaces);
 
   useEffect(() => {
-    if(response !== undefined){
-      addItems(response)
-    }
-  }, [response, addItems])
+    if (!weatherData?.["daily"]) return;
+    if (response === undefined) return;
+    if (response.length > 0) return;
+    const callFunc = async () => {
+      setAiLoading(true);
+      const data = await fetchPackingList({ daily: weatherData["daily"] });
+      setData(data);
+      setAiLoading(false);
+    };
+    callFunc();
+  }, [weatherData, fetchPackingList, response]);
 
   useEffect(() => {
-    if(!isLoading && data && data.length > 0 && data !== lastSubmittedDataRef.current && tripInfo){
-      addBulk({ bulkItems: data, tripId: tripInfo._id })
-      lastSubmittedDataRef.current = data
+    if (!tripInfo?.aboutCity) return;
+    if (famousPlaces.length > 0) return;
+    const callFunc = async () => {
+      setPlacesLoading(true);
+      const data = await fetchFamousPlaces({ city: tripInfo?.aboutCity });
+      addPlaces(data);
+      setPlacesLoading(false);
+    };
+    callFunc();
+  }, [fetchFamousPlaces, tripInfo, addPlaces, famousPlaces]);
+
+  useEffect(() => {
+    if (response !== undefined) {
+      addItems(response);
     }
-  }, [data, isLoading, addBulk, tripInfo, tripInfo?._id])
+  }, [response, addItems]);
+
+  useEffect(() => {
+    if (
+      !aiLoading &&
+      data &&
+      data.length > 0 &&
+      data !== lastSubmittedDataRef.current &&
+      tripInfo
+    ) {
+      addBulk({ bulkItems: data, tripId: tripInfo._id });
+      lastSubmittedDataRef.current = data;
+    }
+  }, [data, aiLoading, addBulk, tripInfo, tripInfo?._id]);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-20 space-y-15">
@@ -74,9 +112,12 @@ export default function Planner() {
       </div>
 
       {mode === "planner" ? (
-        <ListPackingItems isLoading={isLoading} />
+        <ListPackingItems isLoading={aiLoading || weatherLoading} />
       ) : (
-        <ListPlaces places={places ? places : []} isLoading={placesLoading} />
+        <ListPlaces
+          places={famousPlaces ? famousPlaces : []}
+          isLoading={placesLoading}
+        />
       )}
     </div>
   );

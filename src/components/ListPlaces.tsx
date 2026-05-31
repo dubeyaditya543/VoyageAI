@@ -1,5 +1,6 @@
-import { useCityStore } from "../store/cityStore";
+import { useQuery } from "convex/react";
 import { FamousPlaceCard, type Place } from "./FamousPlaceCard";
+import { api } from "../../convex/_generated/api";
 
 export default function ListPlaces({
   places,
@@ -8,13 +9,13 @@ export default function ListPlaces({
   places: Place[];
   isLoading: boolean;
 }) {
-  const city = useCityStore((state) => state.currentCity);
+  const tripInfo = useQuery(api.packingItems.getTripInfo)
 
   return (
     <section className="space-y-8">
       <div className="space-y-2">
         <h2 className="text-3xl font-bold text-white tracking-tight">
-          {city ? `Must visit places in ${city.name}` : "Choose a city first"}
+          {tripInfo ? `Must visit places in ${tripInfo?.aboutCity.name}` : "Choose a city to show famous places"}
         </h2>
         <p className="text-zinc-500">Famous places to visit.</p>
       </div>

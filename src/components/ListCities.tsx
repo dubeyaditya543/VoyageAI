@@ -25,18 +25,16 @@ export default function ListCities({
     );
   }
 
-  if (!cities || !cities.length) return <div>No destination found</div>;
-
   return (
     <div className="flex flex-col gap-1 max-h-72 overflow-y-auto z-50 bg-zinc-900 border border-zinc-800 rounded-2xl p-2 shadow-2xl">
-      {cities.length > 0 ? (
+      {cities && cities.length > 0 ? (
         cities.map((city) => (
           <div
             className="group px-4 py-3 hover:bg-zinc-800 transition-all flex w-full justify-between items-center rounded-xl cursor-pointer"
             key={city.id}
             onClick={() => {
-              setCity(city);
-              addCity({cityName: city.name})
+              setCity({...city, postcodes: city?.postcodes?.map((postcode) => postcode.toString()) || []});
+              addCity({cityName: city.name, aboutCity: {...city, postcodes: city?.postcodes?.map((postcode) => postcode.toString()) || []}})
               setName("");
               clearItems();
             }}
@@ -68,7 +66,7 @@ export default function ListCities({
           </div>
         ))
       ) : (
-        <div className="p-8 text-center text-zinc-600 text-sm italic">
+        <div className="p-8 text-center text-sm">
           No destinations found
         </div>
       )}

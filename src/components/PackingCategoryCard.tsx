@@ -48,6 +48,10 @@ export default function PackingCategory({
       </div>
 
       <div className="space-y-4">
+        <div className="flex justify-between items-center text-sm border-b border-zinc-800/50 pb-3 font-semibold">
+          <span className="md:px-9">Item name</span>
+          <span>Quantity</span>
+        </div>
         {items.map((item) => (
           <label
             key={item.itemName}
@@ -83,9 +87,12 @@ export default function PackingCategory({
             <div
               className={`w-full flex ${item.packed ? "line-through" : ""} flex-col gap-1 `}
             >
-              <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-md font-bold">
-                {item.itemName.toUpperCase()}
-              </span>
+              <div className="flex justify-between items-center">
+                <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-md font-bold">
+                  {item.itemName.toUpperCase()}
+                </span>
+                <span className="text-xs font-semibold md:px-5">{item.quantity}</span>
+              </div>
               <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-xs font-medium">
                 {item.reason ? item.reason.toLocaleUpperCase() : ""}
               </span>

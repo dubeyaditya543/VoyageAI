@@ -3,7 +3,29 @@ import { mutation, query } from "./_generated/server";
 import { ConvexError, v } from "convex/values";
 
 export const addCity = mutation({
-  args: { cityName: v.string() },
+  args: {
+    cityName: v.string(),
+    aboutCity: v.object({
+      id: v.number(),
+      name: v.string(),
+      latitude: v.number(),
+      longitude: v.number(),
+      elevation: v.optional(v.number()),
+      feature_code: v.optional(v.string()),
+      country_code: v.string(),
+      admin1_id: v.optional(v.number()),
+      admin3_id: v.optional(v.number()),
+      admin4_id: v.optional(v.number()),
+      timezone: v.optional(v.string()),
+      population: v.optional(v.number()),
+      postcodes: v.optional(v.array(v.string())),
+      country_id: v.number(),
+      country: v.string(),
+      admin1: v.optional(v.string()),
+      admin3: v.optional(v.string()),
+      admin4: v.optional(v.string()),
+    }),
+  },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Unauthenticated");
@@ -21,7 +43,11 @@ export const addCity = mutation({
 
       await ctx.db.delete(tripInfo._id);
     }
-    await ctx.db.insert("trips", { userId, cityName: args.cityName });
+    await ctx.db.insert("trips", {
+      userId,
+      cityName: args.cityName,
+      aboutCity: args.aboutCity,
+    });
   },
 });
 

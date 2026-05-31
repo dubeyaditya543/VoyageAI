@@ -7,14 +7,14 @@ const ai = new GoogleGenAI({
   apiKey: import.meta.env.VITE_GEMINI_API_KEY,
 });
 
-export const usePlaces = (city: CityFetch | null) => {
+export const usePlaces = (city: CityFetch | undefined) => {
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | unknown>("");
 
   useEffect(() => {
     const fetchResponse = async () => {
-      if (!city) {
+      if (!city || city === undefined) {
         setPlaces(null);
         setIsLoading(false);
         setError("");
@@ -25,7 +25,7 @@ export const usePlaces = (city: CityFetch | null) => {
         setError("");
 
         const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-3.1-flash-lite",
           contents: `Based on ${JSON.stringify(city)} return an array of 8 objects only:
                   [
                     {

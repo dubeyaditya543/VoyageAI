@@ -52,7 +52,7 @@ export const FamousPlaceCard = ({ place }: CardProps) => {
             </div>
           </div>
 
-          <p className="text-sm text-zinc-300 leading-relaxed line-clamp-3 sm:line-clamp-2 md:line-clamp-3">
+          <p className="text-sm text-zinc-300 font-semibold leading-relaxed line-clamp-3 sm:line-clamp-2 md:line-clamp-3">
             {place.description}
           </p>
         </div>
