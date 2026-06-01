@@ -19,6 +19,7 @@ export default function Planner() {
   const { weatherData, isLoading: weatherLoading } = useWeather();
 
   const fetchFamousPlaces = useAction(api.ai.useAiToFetchFamousPlaces);
+  const clearPlaces = useFamousPlaceStore((state) => state.clearPlaces)
 
   const lastSubmittedDataRef = useRef<typeof data | null>(null);
 
@@ -42,24 +43,34 @@ export default function Planner() {
     if (response.length > 0) return;
     const callFunc = async () => {
       setAiLoading(true);
-      const data = await fetchPackingList({ daily: weatherData["daily"] });
-      setData(data);
-      setAiLoading(false);
+      try {
+        const data = await fetchPackingList({ daily: weatherData["daily"] });
+        setData(data);
+      } catch (error) {
+        console.error("something went wrong", error);
+      } finally {
+        setAiLoading(false);
+      }
     };
     callFunc();
   }, [weatherData, fetchPackingList, response]);
 
   useEffect(() => {
     if (!tripInfo?.aboutCity) return;
-    if (famousPlaces.length > 0) return;
     const callFunc = async () => {
+      clearPlaces()
       setPlacesLoading(true);
-      const data = await fetchFamousPlaces({ city: tripInfo?.aboutCity });
-      addPlaces(data);
-      setPlacesLoading(false);
+      try {
+        const data = await fetchFamousPlaces({ city: tripInfo?.aboutCity });
+        addPlaces(data);
+      } catch (error) {
+        console.error("something went wrong", error);
+      } finally {
+        setPlacesLoading(false);
+      }
     };
     callFunc();
-  }, [fetchFamousPlaces, tripInfo, addPlaces, famousPlaces]);
+  }, [fetchFamousPlaces, tripInfo, addPlaces, clearPlaces]);
 
   useEffect(() => {
     if (response !== undefined) {
@@ -68,16 +79,23 @@ export default function Planner() {
   }, [response, addItems]);
 
   useEffect(() => {
-    if (
-      !aiLoading &&
-      data &&
-      data.length > 0 &&
-      data !== lastSubmittedDataRef.current &&
-      tripInfo
-    ) {
-      addBulk({ bulkItems: data, tripId: tripInfo._id });
-      lastSubmittedDataRef.current = data;
-    }
+    const callFunc = async () => {
+      if (
+        !aiLoading &&
+        data &&
+        data.length > 0 &&
+        data !== lastSubmittedDataRef.current &&
+        tripInfo
+      ) {
+        try {
+          await addBulk({ bulkItems: data, tripId: tripInfo._id });
+          lastSubmittedDataRef.current = data;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+    callFunc();
   }, [data, aiLoading, addBulk, tripInfo, tripInfo?._id]);
 
   return (

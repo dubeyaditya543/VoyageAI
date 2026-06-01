@@ -28,19 +28,27 @@ export const useAiToFetchPackingList = action({
     const groq = new Groq({
       apiKey: process.env.GROQ_API_KEY,
     });
-    const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
-      messages: [
-        {
-          role: "user",
-          content: `Based on this weather data: ${JSON.stringify(args.daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Return ONLY the JSON. Do not include any markdown formatting.`,
-        },
-      ],
-    });
-    const data = completion.choices[0]?.message?.content
-      ? JSON.parse(completion.choices[0]?.message?.content)
-      : null;
-    return data;
+    try {
+      const completion = await groq.chat.completions.create({
+        model: "llama-3.3-70b-versatile",
+        messages: [
+          {
+            role: "user",
+            content: `Based on this weather data: ${JSON.stringify(args.daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Return ONLY the JSON. Do not include any markdown formatting.`,
+          },
+        ],
+      });
+      const data = completion.choices[0]?.message?.content
+        ? JSON.parse(completion.choices[0]?.message?.content)
+        : null;
+      if (data) {
+        return data;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.error("Could not parse the data", error);
+    }
   },
 });
 
@@ -48,7 +56,7 @@ export const useAiToFetchFamousPlaces = action({
   args: {
     city: v.optional(
       v.object({
-        id: v.number(),
+        id: v.optional(v.number()),
         name: v.string(),
         latitude: v.number(),
         longitude: v.number(),
@@ -102,10 +110,9 @@ export const useAiToFetchFamousPlaces = action({
         const jsonMatch = fullContent.match(/\[[\s\S]*\]/);
         const jsonString = jsonMatch ? jsonMatch[0] : fullContent;
         const data = JSON.parse(jsonString);
-        return data
+        return data;
       } catch (parseError) {
         console.error("Failed to parse JSON from AI response:", parseError);
-        return "Failed to parse response to json"
       }
     }
   },

@@ -7,6 +7,7 @@ type ItemStore = {
   addItems: (newItems: PackingItem[]) => void;
   addItemManually: (newItem: PackingItem) => void;
   loading: boolean;
+  setLoading: (value: boolean) => void,
   markPacked: (id: Id<"packingItems">) => void;
   clearItems: () => void;
 };
@@ -14,9 +15,14 @@ type ItemStore = {
 export const useItemStore = create<ItemStore>((set) => ({
   items: [],
   loading: false,
+  setLoading: (value: boolean) => {
+    set(() => ({
+      loading: value
+    }))
+  },
   addItems: (newItems: PackingItem[]) => {
     set(() => ({
-      loading: true,
+      loading: false,
       items: newItems,
     }));
   },
@@ -32,7 +38,7 @@ export const useItemStore = create<ItemStore>((set) => ({
         itemName: newItem.itemName,
         category: newItem.category,
         quantity: newItem.quantity,
-        reason: newItem.reason ? newItem.reason : "",
+        reason: newItem.reason,
         packed: newItem.packed,
       };
 

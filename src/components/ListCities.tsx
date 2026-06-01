@@ -14,8 +14,10 @@ export default function ListCities({
   const { cities, isLoading } = useCities(cityName);
   const setCity = useCityStore((state) => state.setCity);
   const clearItems = useItemStore((state) => state.clearItems);
-  
-  const addCity = useMutation(api.packingItems.addCity) 
+
+  const setLoading = useItemStore((state) => state.setLoading)
+
+  const addCity = useMutation(api.packingItems.addCity);
 
   if (isLoading) {
     return (
@@ -32,11 +34,29 @@ export default function ListCities({
           <div
             className="group px-4 py-3 hover:bg-zinc-800 transition-all flex w-full justify-between items-center rounded-xl cursor-pointer"
             key={city.id}
-            onClick={() => {
-              setCity({...city, postcodes: city?.postcodes?.map((postcode) => postcode.toString()) || []});
-              addCity({cityName: city.name, aboutCity: {...city, postcodes: city?.postcodes?.map((postcode) => postcode.toString()) || []}})
+            onClick={async () => {
+              setCity({
+                ...city,
+                postcodes:
+                  city?.postcodes?.map((postcode) => postcode.toString()) || [],
+              });
               setName("");
               clearItems();
+              try {
+                setLoading(true)
+                await addCity({
+                  cityName: city.name,
+                  aboutCity: {
+                    ...city,
+                    postcodes:
+                      city?.postcodes?.map((postcode) => postcode.toString()) ||
+                      [],
+                  },
+                });
+                setLoading(false)
+              } catch (error) {
+                console.error("Failed to add city", error);
+              }
             }}
           >
             <div className="space-y-0.5">
@@ -66,9 +86,7 @@ export default function ListCities({
           </div>
         ))
       ) : (
-        <div className="p-8 text-center text-sm">
-          No destinations found
-        </div>
+        <div className="p-8 text-center text-sm">No destinations found</div>
       )}
     </div>
   );

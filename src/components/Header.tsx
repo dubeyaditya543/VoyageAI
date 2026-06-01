@@ -30,7 +30,7 @@ export default function Header() {
         {user ? (
           <div className="flex gap-4 items-center">
             <span className="font-bold hidden md:inline uppercase">
-              {user?.name}
+              {user?.name?.split(" ")[0]}
             </span>
             <button
               onClick={() => handleOnClick()}

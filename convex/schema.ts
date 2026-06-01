@@ -9,7 +9,7 @@ const schema = defineSchema({
     userId: v.id("users"),
     cityName: v.string(),
     aboutCity: v.object({
-      id: v.number(),
+      id: v.optional(v.number()),
       name: v.string(),
       latitude: v.number(),
       longitude: v.number(),

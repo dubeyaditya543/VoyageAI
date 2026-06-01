@@ -6,7 +6,7 @@ export const addCity = mutation({
   args: {
     cityName: v.string(),
     aboutCity: v.object({
-      id: v.number(),
+      id: v.optional(v.number()),
       name: v.string(),
       latitude: v.number(),
       longitude: v.number(),
@@ -160,6 +160,9 @@ export const checkItem = mutation({
     }
     const item = await ctx.db.get(args.itemId);
     if (!item) throw new Error("Item not found");
+    if(item.tripId !== tripInfo._id) {
+      throw new Error("Unauthorized")
+    }
     await ctx.db.patch("packingItems", args.itemId, { packed: !item.packed });
   },
 });

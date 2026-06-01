@@ -61,10 +61,17 @@ export default function PackingCategory({
               <input
                 type="checkbox"
                 checked={item.packed}
-                onChange={() => {
+                onChange={async () => {
                   if (item._id && tripInfo) {
                     markPacked(item?._id);
-                    checkItem({ itemId: item?._id, tripId: tripInfo._id });
+                    try {
+                      await checkItem({
+                        itemId: item?._id,
+                        tripId: tripInfo._id,
+                      });
+                    } catch (error) {
+                      console.error("Failed to update item", error);
+                    }
                   }
                 }}
                 className="peer h-5 w-5 appearance-none rounded-lg border border-zinc-800 bg-zinc-900 checked:bg-white checked:border-white transition-all cursor-pointer"
@@ -91,7 +98,9 @@ export default function PackingCategory({
                 <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-md font-bold">
                   {item.itemName.toUpperCase()}
                 </span>
-                <span className="text-xs font-semibold md:px-5">{item.quantity}</span>
+                <span className="text-xs font-semibold md:px-5">
+                  {item.quantity}
+                </span>
               </div>
               <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors text-xs font-medium">
                 {item.reason ? item.reason.toLocaleUpperCase() : ""}
@@ -141,18 +150,22 @@ export default function PackingCategory({
             className="w-20 px-2 py-2 bg-zinc-900 border border-zinc-800 rounded-lg outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all text-xl placeholder:text-zinc-700 text-white"
           />
           <button
-            onClick={() => {
+            onClick={async () => {
               addItem({ itemName, quantity, category, packed: false });
               setQuantity(1);
               setItemName("");
               setShowAddItem(false);
               if (tripInfo)
-                addItems({
-                  itemName: itemName,
-                  quantity: quantity,
-                  category: category,
-                  tripId: tripInfo?._id,
-                });
+                try {
+                  await addItems({
+                    itemName: itemName,
+                    quantity: quantity,
+                    category: category,
+                    tripId: tripInfo?._id,
+                  });
+                } catch (error) {
+                  console.error("Failed to add item", error);
+                }
             }}
             className="w-fit py-1 px-4 border border-dashed border-zinc-800 rounded-xl text-zinc-500 text-[10px] font-black uppercase tracking-widest hover:border-zinc-700 hover:text-zinc-400 hover:bg-zinc-800/50 transition-all hover:cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2"
             disabled={itemName.length === 0}
