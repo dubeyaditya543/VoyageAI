@@ -140,9 +140,11 @@ export const addBulk = mutation({
       args.bulkItems.map((item) => {
         return ctx.db.insert("packingItems", {
           packed: false,
-          reason: item.reason,
           tripId: args.tripId,
-          ...item,
+          itemName: item.itemName.toLowerCase(),
+          category: item.category,
+          reason: item.reason,
+          quantity: item.quantity,
         });
       }),
     );
@@ -160,8 +162,8 @@ export const checkItem = mutation({
     }
     const item = await ctx.db.get(args.itemId);
     if (!item) throw new Error("Item not found");
-    if(item.tripId !== tripInfo._id) {
-      throw new Error("Unauthorized")
+    if (item.tripId !== tripInfo._id) {
+      throw new Error("Unauthorized");
     }
     await ctx.db.patch("packingItems", args.itemId, { packed: !item.packed });
   },
