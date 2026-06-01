@@ -16,7 +16,6 @@ export const FamousPlaceCard = ({ place }: CardProps) => {
   const { data: imageUrl } = useImage(place.name);
   return (
     <article className="group flex flex-col h-48 sm:flex-row rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-800/30 hover:bg-zinc-800/50 transition-all duration-300 shadow-lg hover:shadow-xl">
-      {/* Image Container */}
       <div className="w-full sm:w-48 md:w-64 shrink-0 aspect-video sm:aspect-square md:aspect-video overflow-hidden relative">
         <img
           src={imageUrl}
@@ -26,7 +25,6 @@ export const FamousPlaceCard = ({ place }: CardProps) => {
         <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent sm:hidden" />
       </div>
 
-      {/* Details Container */}
       <div className="p-5 flex flex-col justify-between flex-1 gap-4">
         <div className="space-y-2">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">

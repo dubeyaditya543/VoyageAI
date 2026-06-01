@@ -18,7 +18,6 @@ export default function HeroSection() {
   
   return (
     <div className="flex flex-col w-full max-w-7xl mx-auto px-6 py-20 gap-32">
-      {/* Hero */}
       <section className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-xs font-medium text-zinc-400">
           AI-Powered Travel Intelligence
@@ -39,11 +38,9 @@ export default function HeroSection() {
         </div>
       </section>
 
-      {/* Social Proof / Trust */}
       <div className="flex flex-col items-center gap-8 py-12 border-y border-zinc-900/50">
         <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold">Trusted by modern explorers</p>
         <div className="flex flex-wrap justify-center gap-10 md:gap-20 opacity-40 grayscale">
-          {/* Logo Placeholders - Using font weights for logo-like feel */}
           <span className="text-xl md:text-2xl font-black tracking-tighter text-white">AIRBNB</span>
           <span className="text-xl md:text-2xl font-black tracking-tighter text-white">EXPEDIA</span>
           <span className="text-xl md:text-2xl font-black tracking-tighter text-white">KAYAK</span>
@@ -51,7 +48,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Destinations Section */}
       <section className="space-y-12">
         <div className="flex flex-col md:flex-row justify-between items-end gap-4">
           <div className="space-y-2">
@@ -71,7 +67,6 @@ export default function HeroSection() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="space-y-20 py-20">
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <h2 className="text-4xl font-bold text-white">Engineered for travel.</h2>
