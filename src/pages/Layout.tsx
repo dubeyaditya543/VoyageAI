@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 
-export default function Layout(){
+export default function Layout() {
   return (
     <div className="min-h-screen bg-zinc-950 selection:bg-blue-500/30 selection:text-blue-200">
       <Header />

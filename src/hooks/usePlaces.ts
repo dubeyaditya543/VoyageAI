@@ -1,19 +1,20 @@
 import { GoogleGenAI } from "@google/genai";
 import { useEffect, useState } from "react";
 import type { Place } from "../components/FamousPlaceCard";
+import type { CityFetch } from "../types";
 
 const ai = new GoogleGenAI({
   apiKey: import.meta.env.VITE_GEMINI_API_KEY,
 });
 
-export const usePlaces = (city: CityFetch | null) => {
+export const usePlaces = (city: CityFetch | undefined) => {
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | unknown>("");
 
   useEffect(() => {
     const fetchResponse = async () => {
-      if (!city) {
+      if (!city || city === undefined) {
         setPlaces(null);
         setIsLoading(false);
         setError("");
@@ -24,20 +25,19 @@ export const usePlaces = (city: CityFetch | null) => {
         setError("");
 
         const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-3.1-flash-lite",
           contents: `Based on ${JSON.stringify(city)} return an array of 8 objects only:
-[
-  {
-    id: number,
-    name: string,
-    description: string,
-    rating: number,          // 0‑5
-    about_place_link: string             // Wikipedia
-  },
-  …
-]
-Return ONLY the JSON. If a real image cannot be found, set imageLink to "".
-`,
+                  [
+                    {
+                      id: number,
+                      name: string,
+                      description: string,
+                      rating: number,          // 0‑5
+                      about_place_link: string             // Wikipedia
+                    },
+                    …
+                  ]
+                  Return ONLY the JSON. If a real image cannot be found, set imageLink to "".`,
         });
 
         const fullContent = response.text;
@@ -64,4 +64,3 @@ Return ONLY the JSON. If a real image cannot be found, set imageLink to "".
 
   return { places, isLoading, error };
 };
-

@@ -1,62 +1,57 @@
 import { create } from "zustand";
+import type { PackingItem } from "../types";
+import type { Id } from "../../convex/_generated/dataModel";
 
 type ItemStore = {
-  items: PackingCategory[];
-  addItems: (newItems: PackingCategory[]) => void;
-  addItemManually: (newItem: PackingItem, category: string) => void;
+  items: PackingItem[];
+  addItems: (newItems: PackingItem[]) => void;
+  addItemManually: (newItem: PackingItem) => void;
   loading: boolean;
-  markPacked: (packedItem: PackingItem, category: string) => void;
+  setLoading: (value: boolean) => void,
+  markPacked: (id: Id<"packingItems">) => void;
   clearItems: () => void;
 };
 
 export const useItemStore = create<ItemStore>((set) => ({
   items: [],
   loading: false,
-  addItems: (newItems: PackingCategory[]) => {
+  setLoading: (value: boolean) => {
     set(() => ({
-      loading: true,
+      loading: value
+    }))
+  },
+  addItems: (newItems: PackingItem[]) => {
+    set(() => ({
+      loading: false,
       items: newItems,
     }));
   },
-  addItemManually: (newItem: PackingItem, category: string) => {
+  addItemManually: (newItem: PackingItem) => {
     set((state) => {
-      const isItemFound = state.items.some((item) =>
-        item?.items.some((i) => i.name === newItem.name),
+      const isItemFound = state.items.some(
+        (item) => item?.itemName === newItem.itemName,
       );
       if (isItemFound) {
         throw new Error("Item is already present");
       }
       const createdItem: PackingItem = {
-        name: newItem.name,
+        itemName: newItem.itemName,
+        category: newItem.category,
         quantity: newItem.quantity,
-        importance: newItem.importance ? newItem.importance : "Medium",
-        reason: newItem.reason ? newItem.reason : "",
-        packed: false,
+        reason: newItem.reason,
+        packed: newItem.packed,
       };
 
       return {
-        items: state.items.map((item: PackingCategory) =>
-          item.category === category
-            ? { ...item, items: [...item.items, createdItem] }
-            : item,
-        ),
+        items: [createdItem, ...state.items],
       };
     });
   },
-  markPacked: (packedItem: PackingItem, category: string) => {
+  markPacked: (id: Id<"packingItems">) => {
     set((state) => {
       return {
-        items: state.items.map((item: PackingCategory) =>
-          item.category === category
-            ? {
-                ...item,
-                items: item.items.map((i) =>
-                  i.name === packedItem.name
-                    ? { ...i, packed: !i.packed }
-                    : i,
-                ),
-              }
-            : item,
+        items: state.items.map((item: PackingItem) =>
+          item._id === id ? { ...item, packed: !item.packed } : item,
         ),
       };
     });

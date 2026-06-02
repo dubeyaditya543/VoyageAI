@@ -1,7 +1,10 @@
-import { useCityStore } from "../store/cityStore";
+import { useQuery } from "convex/react";
 import { useItemStore } from "../store/itemStore";
 import { useUtilStore } from "../store/utilStore";
 import PackingCategory from "./PackingCategoryCard";
+import { api } from "../../convex/_generated/api";
+
+type Category = "clothing" | "electronics" | "toiletries" | "miscellaneous";
 
 export default function ListPackingItems({
   isLoading,
@@ -9,22 +12,43 @@ export default function ListPackingItems({
   isLoading: boolean;
 }) {
   const items = useItemStore((state) => state.items);
-  const city = useCityStore((state) => state.currentCity);
   const handleFocus = useUtilStore((state) => state.handleFocus);
+
+  const tripInfo = useQuery(api.packingItems.getTripInfo);
+
+  const clothingList = items?.filter(
+    (packingItem) => packingItem.category === "clothing",
+  );
+  const electronicsList = items?.filter(
+    (packingItem) => packingItem.category === "electronics",
+  );
+  const toiletriesList = items?.filter(
+    (packingItem) => packingItem.category === "toiletries",
+  );
+  const miscellaneousList = items?.filter(
+    (packingItem) => packingItem.category === "miscellaneous",
+  );
+
+  const generatedList = [
+    { category: "clothing", items: clothingList },
+    { category: "electronics", items: electronicsList },
+    { category: "toiletries", items: toiletriesList },
+    { category: "miscellaneous", items: miscellaneousList },
+  ];
 
   return (
     <div className="w-full space-y-12">
       <div className="flex flex-col md:flex-row items-end justify-between gap-4">
         <div className="space-y-2">
           <h2 className="text-3xl font-bold text-white tracking-tight">
-            {city ? (
+            {tripInfo ? (
               <div>
                 Your Packing List for{" "}
                 <span
                   onClick={handleFocus}
                   className="hover:cursor-pointer underline"
                 >
-                  {city?.name}
+                  {tripInfo?.cityName}
                 </span>
               </div>
             ) : (
@@ -37,12 +61,10 @@ export default function ListPackingItems({
         </div>
         {items.length > 0 ? (
           <div className="flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-[10px] font-black uppercase tracking-widest text-zinc-500">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
             Ready to pack
           </div>
         ) : (
           <div className="flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-[10px] font-black uppercase tracking-widest text-zinc-500">
-            <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></span>
             No items
           </div>
         )}
@@ -54,15 +76,21 @@ export default function ListPackingItems({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-        {items.map((item) => (
-          <PackingCategory
-            key={item.category}
-            category={item?.category}
-            items={item?.items}
-          />
-        ))}
-      </div>
+      {!items.length && !isLoading && (
+        <div className="text-center font-semibold">Nothing to show here...</div>
+      )}
+
+      {!isLoading && items.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          {generatedList.map((item) => (
+            <PackingCategory
+              key={item.category}
+              category={item?.category as Category}
+              items={item?.items}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

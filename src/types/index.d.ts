@@ -1,91 +1,85 @@
+import type { Id } from "../../convex/_generated/dataModel";
+
 type User = {
-  name: string,
-  email: string,
-  password: string
-}
+  name: string;
+  email: string;
+  password: string;
+};
 
 type LoginData = {
-  email: string,
-  password: string
-}
+  email: string;
+  password: string;
+};
 
 type SignupData = LoginData & {
-  name: string
-}
+  name: string;
+};
 
 type SignupFormValues = {
-  name: string,
-  email: string,
-  password: string
-}
+  name: string;
+  email: string;
+  password: string;
+};
 
-type LoginFormValues = Omit<SignupFormValues, "name">
+type LoginFormValues = Omit<SignupFormValues, "name">;
 
 type City = {
-  name: string,
-  country: string,
-  latitude: number,
-  longitude: number
-}
+  name: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+};
 
 type CitiesFetched = [
   {
-    id: number;
+    id?: number;
     name: string;
     latitude: number;
     longitude: number;
-    elevation: number;
-    feature_code: string;
+    elevation?: number;
+    feature_code?: string;
     country_code: string;
-    admin1_id: number;
-    admin3_id: number;
-    admin4_id: number;
-    timezone: string;
-    population: number;
-    postcodes: [number, number];
+    admin1_id?: number;
+    admin3_id?: number;
+    admin4_id?: number;
+    timezone?: string;
+    population?: number;
+    postcodes?: string[];
     country_id: number;
     country: string;
-    admin1: string;
-    admin3: string;
-    admin4: string;
+    admin1?: string;
+    admin3?: string;
+    admin4?: string;
   },
 ];
 
 type CityFetch = {
-    id: number;
-    name: string;
-    latitude: number;
-    longitude: number;
-    elevation: number;
-    feature_code: string;
-    country_code: string;
-    admin1_id: number;
-    admin3_id: number;
-    admin4_id: number;
-    timezone: string;
-    population: number;
-    postcodes: [number, number];
-    country_id: number;
-    country: string;
-    admin1: string;
-    admin3: string;
-    admin4: string;
-  }
+  id?: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+  elevation?: number;
+  feature_code?: string;
+  country_code: string;
+  admin1_id?: number;
+  admin3_id?: number;
+  admin4_id?: number;
+  timezone?: string;
+  population?: number;
+  postcodes?: string[];
+  country_id: number;
+  country: string;
+  admin1?: string;
+  admin3?: string;
+  admin4?: string;
+};
 
 type PackingItem = {
-  name: string;
-  quantity: string;
+  _id?: Id<"packingItems">;
+  tripId?: Id<"trips">;
+  itemName: string;
+  category: "clothing" | "electronics" | "toiletries" | "miscellaneous";
   reason?: string;
-  importance?: "High" | "Medium" | "Low";
-  packed?: boolean
-};
-
-type PackingCategory = {
-  category: string;
-  items: PackingItem[];
-};
-
-type PackingResponse = {
-  trip_summary: string;
-  packing_categories: PackingCategory[];
+  quantity: number;
+  packed: boolean;
 };

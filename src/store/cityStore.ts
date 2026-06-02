@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import type { CityFetch } from "../types";
 
 type CityStore = {
   currentCity: CityFetch | null,

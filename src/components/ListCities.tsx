@@ -1,6 +1,8 @@
+import { useMutation } from "convex/react";
 import { useCities } from "../hooks/useCities";
 import { useCityStore } from "../store/cityStore";
 import { useItemStore } from "../store/itemStore";
+import { api } from "../../convex/_generated/api";
 
 export default function ListCities({
   cityName,
@@ -13,6 +15,10 @@ export default function ListCities({
   const setCity = useCityStore((state) => state.setCity);
   const clearItems = useItemStore((state) => state.clearItems);
 
+  const setLoading = useItemStore((state) => state.setLoading)
+
+  const addCity = useMutation(api.packingItems.addCity);
+
   if (isLoading) {
     return (
       <div className="p-12 flex justify-center bg-zinc-900 border border-zinc-800 rounded-2xl">
@@ -21,19 +27,36 @@ export default function ListCities({
     );
   }
 
-  if (!cities) return null;
-
   return (
     <div className="flex flex-col gap-1 max-h-72 overflow-y-auto z-50 bg-zinc-900 border border-zinc-800 rounded-2xl p-2 shadow-2xl">
-      {cities.length > 0 ? (
+      {cities && cities.length > 0 ? (
         cities.map((city) => (
           <div
             className="group px-4 py-3 hover:bg-zinc-800 transition-all flex w-full justify-between items-center rounded-xl cursor-pointer"
             key={city.id}
-            onClick={() => {
-              setCity(city);
+            onClick={async () => {
+              setCity({
+                ...city,
+                postcodes:
+                  city?.postcodes?.map((postcode) => postcode.toString()) || [],
+              });
               setName("");
               clearItems();
+              try {
+                setLoading(true)
+                await addCity({
+                  cityName: city.name,
+                  aboutCity: {
+                    ...city,
+                    postcodes:
+                      city?.postcodes?.map((postcode) => postcode.toString()) ||
+                      [],
+                  },
+                });
+                setLoading(false)
+              } catch (error) {
+                console.error("Failed to add city", error);
+              }
             }}
           >
             <div className="space-y-0.5">
@@ -63,9 +86,7 @@ export default function ListCities({
           </div>
         ))
       ) : (
-        <div className="p-8 text-center text-zinc-600 text-sm italic">
-          No destinations found
-        </div>
+        <div className="p-8 text-center text-sm">No destinations found</div>
       )}
     </div>
   );

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ListCities from "./ListCities";
 import { useUtilStore } from "../store/utilStore";
 import { useDebounce } from "../hooks/useDebounce";
+import { useItemStore } from "../store/itemStore";
 
 export default function Search() {
   const [name, setName] = useState<string>("");
@@ -9,8 +10,10 @@ export default function Search() {
   const ref = useRef<HTMLInputElement | null>(null)
   const searchFocus = useUtilStore((state) => state.searchFocus)
 
+  const loading = useItemStore((state) => state.loading)
+
   useEffect(() => {
-    if(ref !== undefined)
+    if(ref.current !== null)
     ref?.current?.focus()
   }, [searchFocus])
 
@@ -29,6 +32,7 @@ export default function Search() {
           type="text"
           placeholder="Where are you going? (e.g. Tokyo, Bali, Paris)"
           className="w-full pl-14 pr-24 py-5 bg-zinc-900 border border-zinc-800 rounded-2xl outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all text-xl placeholder:text-zinc-700 text-white md:placeholder:text-md placeholder:text-sm "
+          disabled={loading}
         />
         {name.length > 0 && (
           <button 

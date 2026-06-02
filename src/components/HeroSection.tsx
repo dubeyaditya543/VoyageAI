@@ -2,13 +2,22 @@ import { useNavigate } from "react-router-dom";
 import DestinationCard from "./DestinationCard";
 import CardInfo from "./InfoCard";
 import ListFeatures from "./ListFeatures";
+import { useConvexAuth } from "@convex-dev/auth/react";
 
 export default function HeroSection() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useConvexAuth()
+
+  const handleStartPlanning = () => {
+    if (isAuthenticated) {
+      navigate("/planner")
+    } else {
+      navigate("/login")
+    }
+  }
   
   return (
     <div className="flex flex-col w-full max-w-7xl mx-auto px-6 py-20 gap-32">
-      {/* Hero */}
       <section className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-full text-xs font-medium text-zinc-400">
           AI-Powered Travel Intelligence
@@ -23,20 +32,15 @@ export default function HeroSection() {
         </p>
         
         <div className="flex items-center gap-4 pt-4">
-          <button onClick={() => navigate("/signup")} className="btn-primary cursor-pointer px-8 py-3 text-base h-12 flex items-center">
+          <button onClick={handleStartPlanning} className="btn-primary cursor-pointer px-8 py-3 text-base h-12 flex items-center">
             Start Planning
-          </button>
-          <button onClick={() => navigate("/login")} className="btn-secondary cursor-pointer px-8 py-3 text-base h-12 flex items-center">
-            View Demo
           </button>
         </div>
       </section>
 
-      {/* Social Proof / Trust */}
       <div className="flex flex-col items-center gap-8 py-12 border-y border-zinc-900/50">
         <p className="text-[10px] uppercase tracking-[0.3em] text-zinc-500 font-bold">Trusted by modern explorers</p>
         <div className="flex flex-wrap justify-center gap-10 md:gap-20 opacity-40 grayscale">
-          {/* Logo Placeholders - Using font weights for logo-like feel */}
           <span className="text-xl md:text-2xl font-black tracking-tighter text-white">AIRBNB</span>
           <span className="text-xl md:text-2xl font-black tracking-tighter text-white">EXPEDIA</span>
           <span className="text-xl md:text-2xl font-black tracking-tighter text-white">KAYAK</span>
@@ -44,7 +48,6 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Destinations Section */}
       <section className="space-y-12">
         <div className="flex flex-col md:flex-row justify-between items-end gap-4">
           <div className="space-y-2">
@@ -64,7 +67,6 @@ export default function HeroSection() {
         </div>
       </section>
 
-      {/* Features */}
       <section className="space-y-20 py-20">
         <div className="text-center max-w-2xl mx-auto space-y-4">
           <h2 className="text-4xl font-bold text-white">Engineered for travel.</h2>
@@ -73,7 +75,6 @@ export default function HeroSection() {
         <ListFeatures />
       </section>
 
-      {/* Info Card / Final CTA */}
       <CardInfo />
     </div>
   );
