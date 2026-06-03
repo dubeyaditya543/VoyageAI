@@ -34,7 +34,7 @@ export const useAiToFetchPackingList = action({
         messages: [
           {
             role: "user",
-            content: `Based on this weather data: ${JSON.stringify(args.daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Make sure to add relevant items only according to weather. Return ONLY the JSON. Do not include any markdown formatting.`,
+            content: `Based on this weather data: ${JSON.stringify(args.daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Make sure to follow the naming convention given in the example. Make sure to add relevant items only according to weather. Return ONLY the JSON. Do not include any markdown formatting.`,
           },
         ],
       });
