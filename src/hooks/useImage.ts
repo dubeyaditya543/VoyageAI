@@ -3,7 +3,7 @@ import { useCityStore } from "../store/cityStore";
 
 export const useImage = (placeName: string) => {
   const currentCity = useCityStore((state) => state.currentCity)
-  const { data, isPending } = useQuery<string>({
+  const { data, isLoading } = useQuery<string>({
     queryKey: ["image", placeName],
     queryFn: async () => {
       const response = await fetch(
@@ -16,5 +16,5 @@ export const useImage = (placeName: string) => {
     enabled: placeName !== null && placeName !== undefined && currentCity?.name !== placeName
   });
 
-  return {data, isPending};
+  return {data, isLoading};
 };
