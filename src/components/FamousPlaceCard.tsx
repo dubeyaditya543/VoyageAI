@@ -13,15 +13,21 @@ type CardProps = {
 };
 
 export const FamousPlaceCard = ({ place }: CardProps) => {
-  const { data: imageUrl } = useImage(place.name);
+  const { data: imageUrl, isPending } = useImage(place.name);
   return (
     <article className="group flex flex-col h-48 sm:flex-row rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-800/30 hover:bg-zinc-800/50 transition-all duration-300 shadow-lg hover:shadow-xl">
       <div className="w-full sm:w-48 md:w-64 shrink-0 aspect-video sm:aspect-square md:aspect-video overflow-hidden relative">
-        <img
-          src={imageUrl}
-          alt={place.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
+        {isPending ? (
+          <div className="p-12 h-full items-center w-full flex justify-center bg-zinc-900 border border-zinc-800 rounded-2xl">
+            <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-400 rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <img
+            src={imageUrl}
+            alt={place.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        )}
         <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent sm:hidden" />
       </div>
 
@@ -83,4 +89,3 @@ export const FamousPlaceCard = ({ place }: CardProps) => {
     </article>
   );
 };
-

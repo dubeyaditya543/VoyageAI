@@ -3,9 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuthActions } from "@convex-dev/auth/react";
 import type { SignupFormValues } from "../types";
 import { useConvexAuth } from "convex/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Signup() {
+  const [isPending, setIsPending] = useState<boolean>(false)
   const {
     register,
     handleSubmit,
@@ -31,6 +32,7 @@ export default function Signup() {
   }
   const onSignupSubmit: SubmitHandler<SignupFormValues> = async (data) => {
     try {
+      setIsPending(true)
       await signIn("password", {
         email: data.email,
         password: data.password,
@@ -45,7 +47,7 @@ export default function Signup() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-4">
-      <div className="w-full max-w-md glass-card rounded-3xl p-8 md:p-10 animate-in fade-in zoom-in-95 duration-700">
+      <div className="w-full max-w-md p-8 md:p-10">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-black tracking-tight mb-2">
             Join Voyage
@@ -75,7 +77,7 @@ export default function Signup() {
               })}
               type="text"
               id="name"
-              placeholder="John Doe"
+              placeholder="Your name"
             />
             {errors.name && (
               <p className="text-xs text-red-400 ml-1">{errors.name.message}</p>
@@ -140,6 +142,9 @@ export default function Signup() {
             className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98] mt-4 cursor-pointer"
             type="submit"
           >
+            {isPending && (
+              <div className="w-5 h-5 border-2 border-zinc-700 border-t-zinc-400 rounded-full animate-spin"></div>
+            )}
             Create Account
           </button>
 

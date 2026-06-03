@@ -139,7 +139,7 @@ export default function PackingCategory({
             onChange={handleAddItemName}
             value={itemName}
             placeholder="Item name"
-            className="w-full px-2 py-2 bg-zinc-900 border border-zinc-800 rounded-lg outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all text-xl placeholder:text-zinc-700 text-white"
+            className="w-full px-2 py-2 bg-zinc-900 border border-zinc-800 rounded-lg outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all md:text-xl text-sm placeholder:text-sm placeholder:text-zinc-700 text-white"
           />
           <input
             type="number"
@@ -147,7 +147,7 @@ export default function PackingCategory({
             onChange={handleSetQuantity}
             value={quantity}
             placeholder="Qauntity"
-            className="w-20 px-2 py-2 bg-zinc-900 border border-zinc-800 rounded-lg outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all text-xl placeholder:text-zinc-700 text-white"
+            className="w-20 px-2 py-2 bg-zinc-900 border border-zinc-800 rounded-lg outline-none focus:border-zinc-700 focus:ring-4 focus:ring-white/5 transition-all md:text-xl text-sm placeholder:text-zinc-700 text-white"
           />
           <button
             onClick={async () => {
