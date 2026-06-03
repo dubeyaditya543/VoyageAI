@@ -40,6 +40,7 @@ export default function ListCities({
                 postcodes:
                   city?.postcodes?.map((postcode) => postcode.toString()) || [],
               });
+              setLoading(false)
               setName("");
               clearItems();
               try {

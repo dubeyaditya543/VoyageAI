@@ -34,7 +34,7 @@ export const useAiToFetchPackingList = action({
         messages: [
           {
             role: "user",
-            content: `Based on this weather data: ${JSON.stringify(args.daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Return ONLY the JSON. Do not include any markdown formatting.`,
+            content: `Based on this weather data: ${JSON.stringify(args.daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Make sure to add relevant items only according to weather. Return ONLY the JSON. Do not include any markdown formatting.`,
           },
         ],
       });
@@ -64,6 +64,7 @@ export const useAiToFetchFamousPlaces = action({
         feature_code: v.optional(v.string()),
         country_code: v.string(),
         admin1_id: v.optional(v.number()),
+        admin2_id: v.optional(v.number()),
         admin3_id: v.optional(v.number()),
         admin4_id: v.optional(v.number()),
         timezone: v.optional(v.string()),
@@ -72,6 +73,7 @@ export const useAiToFetchFamousPlaces = action({
         country_id: v.number(),
         country: v.string(),
         admin1: v.optional(v.string()),
+        admin2: v.optional(v.string()),
         admin3: v.optional(v.string()),
         admin4: v.optional(v.string()),
       }),
