@@ -8,7 +8,7 @@ export default function Homepage() {
   const navigate = useNavigate();
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
-      navigate("/planner");
+      navigate("/planner", {replace: true});
     }
   }, [isAuthenticated, isLoading, navigate]);
   if (isLoading) {
