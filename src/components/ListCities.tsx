@@ -54,9 +54,10 @@ export default function ListCities({
                       [],
                   },
                 });
-                setLoading(false)
               } catch (error) {
                 console.error("Failed to add city", error);
+              }finally{
+                setLoading(false)
               }
             }}
           >
