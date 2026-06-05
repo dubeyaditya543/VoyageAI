@@ -42,6 +42,8 @@ export default function Signup() {
       // navigate("/planner");
     } catch (err) {
       console.log(err);
+    }finally{
+      setIsPending(false)
     }
   };
 
