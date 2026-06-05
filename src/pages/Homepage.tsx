@@ -1,8 +1,16 @@
 import { useConvexAuth } from "@convex-dev/auth/react";
 import HeroSection from "../components/HeroSection";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Homepage() {
-  const { isLoading } = useConvexAuth();
+  const { isAuthenticated, isLoading } = useConvexAuth();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      navigate("/planner", {replace: true});
+    }
+  }, [isAuthenticated, isLoading, navigate]);
   if (isLoading) {
     return (
       <div className="p-12 h-dvh flex justify-center items-center rounded-2xl">

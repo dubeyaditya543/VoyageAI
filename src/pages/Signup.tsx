@@ -19,7 +19,7 @@ export default function Signup() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      navigate("/planner");
+      navigate("/planner", {replace: true});
     }
   }, [isAuthenticated, isLoading, navigate]);
 
@@ -39,9 +39,11 @@ export default function Signup() {
         name: data.name,
         flow: "signUp",
       });
-      navigate("/planner");
+      // navigate("/planner");
     } catch (err) {
       console.log(err);
+    }finally{
+      setIsPending(false)
     }
   };
 
@@ -139,7 +141,7 @@ export default function Signup() {
           </div>
 
           <button
-            className="w-full py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98] mt-4 cursor-pointer"
+            className="w-full flex items-center gap-2 justify-center py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98] mt-2 cursor-pointer"
             type="submit"
           >
             {isPending && (
