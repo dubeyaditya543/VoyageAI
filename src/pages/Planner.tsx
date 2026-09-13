@@ -8,20 +8,25 @@ import ListPlaces from "../components/ListPlaces";
 import { useAction, useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useFamousPlaceStore } from "../store/famousPlaceStore";
+import { useGenderStore } from "../store/genderStore.ts";
 
 export default function Planner() {
   const [data, setData] = useState<[] | null>(null);
   const [aiLoading, setAiLoading] = useState<boolean>(false);
   const [placesLoading, setPlacesLoading] = useState(false);
 
+  const gender = useGenderStore((state) => state.gender);
+  console.log(gender);
+
   const tripInfo = useQuery(api.packingItems.getTripInfo);
 
   const { weatherData, isLoading: weatherLoading } = useWeather();
 
   const fetchFamousPlaces = useAction(api.ai.useAiToFetchFamousPlaces);
-  const clearPlaces = useFamousPlaceStore((state) => state.clearPlaces)
+  const clearPlaces = useFamousPlaceStore((state) => state.clearPlaces);
 
   const lastSubmittedDataRef = useRef<typeof data | null>(null);
+  const lastSubmittedGenderRef = useRef<typeof gender | null>(null);
 
   const fetchPackingList = useAction(api.ai.useAiToFetchPackingList);
 
@@ -40,11 +45,15 @@ export default function Planner() {
   useEffect(() => {
     if (!weatherData?.["daily"]) return;
     if (response === undefined) return;
-    if (response.length > 0) return;
+    if (response.length > 0 && gender === lastSubmittedGenderRef.current)
+      return;
     const callFunc = async () => {
       setAiLoading(true);
       try {
-        const data = await fetchPackingList({ daily: weatherData["daily"] });
+        const data = await fetchPackingList({
+          daily: weatherData["daily"],
+          gender: gender,
+        });
         setData(data);
       } catch (error) {
         console.error("something went wrong", error);
@@ -53,12 +62,12 @@ export default function Planner() {
       }
     };
     callFunc();
-  }, [weatherData, fetchPackingList, response]);
+  }, [weatherData, fetchPackingList, response, gender]);
 
   useEffect(() => {
     if (!tripInfo?.aboutCity) return;
     const callFunc = async () => {
-      clearPlaces()
+      clearPlaces();
       setPlacesLoading(true);
       try {
         const data = await fetchFamousPlaces({ city: tripInfo?.aboutCity });
@@ -90,6 +99,7 @@ export default function Planner() {
         try {
           await addBulk({ bulkItems: data, tripId: tripInfo._id });
           lastSubmittedDataRef.current = data;
+          lastSubmittedGenderRef.current = gender;
         } catch (error) {
           console.error(error);
         }

@@ -77,7 +77,9 @@ export default function ListPackingItems({
       )}
 
       {!items.length && !isLoading && (
-        <div className="text-center font-semibold">Nothing to show here...</div>
+        <div className="text-center font-semibold">
+          Nothing to show here...Please choose a city and a gender
+        </div>
       )}
 
       {!isLoading && items.length > 0 && (
