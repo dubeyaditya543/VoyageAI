@@ -15,7 +15,7 @@ export const useAiToFetchPackingList = action({
         temperature_2m_max: v.array(v.number()),
         temperature_2m_min: v.array(v.number()),
         time: v.array(v.string()),
-      }),
+      })
     ),
     // gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
     gender: v.optional(v.string())
