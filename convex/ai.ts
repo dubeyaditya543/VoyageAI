@@ -17,12 +17,14 @@ export const useAiToFetchPackingList = action({
         time: v.array(v.string()),
       }),
     ),
+    // gender: v.optional(v.union(v.literal("male"), v.literal("female"))),
+    gender: v.optional(v.string())
   },
   handler: async (_, args) => {
     if (!process.env.GROQ_API_KEY) {
       throw new Error("api key is not set");
     }
-    if (!args.daily) {
+    if (!args.daily || !args.gender) {
       return;
     }
     const groq = new Groq({
@@ -30,11 +32,11 @@ export const useAiToFetchPackingList = action({
     });
     try {
       const completion = await groq.chat.completions.create({
-        model: "llama-3.3-70b-versatile",
+        model: "openai/gpt-oss-120b",
         messages: [
           {
             role: "user",
-            content: `Based on this weather data: ${JSON.stringify(args.daily)}, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Make sure to follow the naming convention given in the example. Make sure to add relevant items only according to weather. Return ONLY the JSON. Do not include any markdown formatting.`,
+            content: `Based on this weather data: ${JSON.stringify(args.daily)} and for a ${args?.gender} traveller, create a packing list. Return the response as a JSON array following this structure: [{itemName: string, category: category from ${categories}, reason: string (descriptive based on the weather data), quantity: number}]. State the reason according to the weather pattern. Include only ${categories} categories. Make sure each category has a minimum of 10 items and at max 13 items. Make sure to follow the naming convention given in the example. Make sure to add relevant items according to weather and the gender only. Return ONLY the JSON. Do not include any markdown formatting.`,
           },
         ],
       });
@@ -83,7 +85,7 @@ export const useAiToFetchFamousPlaces = action({
     if (!process.env.GEMINI_API_KEY) {
       throw new Error("No api key");
     }
-    if (!args.city || args.city === undefined) {
+    if (!args.city) {
       return;
     }
     const ai = new GoogleGenAI({
